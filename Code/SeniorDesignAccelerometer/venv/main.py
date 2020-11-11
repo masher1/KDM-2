@@ -6,6 +6,7 @@ import numpy as np  # used for mathematical operations
 from statistics import mean
 
 def main():
+    xVal, yVal, zVal = []
     while True:
         print("%f %f %f" % accelerometer.acceleration)
         print("Motion detected: %s" % accelerometer.events["motion"])
@@ -18,9 +19,17 @@ def main():
         else:  # If bufcount is now greater than the buf size
             # value = cumulative >> 2     #value is equal to cumulative/4
             # cumulative = 0
-            for data in buf:
-                mean(abs(x - y) for x, y in data.x)
-            print(buf)
+
+            for i in range(len(buf)):
+                xVal[i] = buf[i].x
+                yVal[i] = buf[i].y
+                zVal[i] = buf[i].z
+
+            xValMean = mean(xVal)
+            yValMean = mean(yVal)
+            zValMean = mean(zVal)
+
+            print((xValMean,yValMean,zValMean))
 
 
 if __name__ == "__main__":
