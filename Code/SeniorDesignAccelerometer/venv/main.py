@@ -44,9 +44,6 @@ def main():
         if(falldetected):
             print("FALL HAS BEEN DETECTED!!!!!")    #if fall detected print alert
 
-        
-
-
 
 if __name__ == "__main__":
     i2c = busio.I2C(board.SCL, board.SDA)  # prepare an I2C connection for our current boards SCL and SDA pins
