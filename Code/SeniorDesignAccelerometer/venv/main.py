@@ -4,32 +4,45 @@ import busio  # We will be using this modules library for handling the I2C seria
 import adafruit_adxl34x # This library contains all the code we need for reading information from our ADXL345 accelerometer
 import numpy as np  # used for mathematical operations
 from statistics import mean
+from queue import Queue
 
 def main():
-    xVal, yVal, zVal = []
+    total = [0, 0, 0]                               #stores totals
+    fallthresh = 10                                 #if the average acceleration exceeds this fall is detected
+    axislimit = 2                                   #number of axis required to be over threshold (1-3) for fall to be detected   
+    buffersize = 4                       
+    buf = Queue(maxsize = buffersize)               #creates buffer of desired size as a queue (first in first out)
+    falldetected = False                            #stores if a fall is detected
+
     while True:
         print("%f %f %f" % accelerometer.acceleration)
         print("Motion detected: %s" % accelerometer.events["motion"])
         time.sleep(0.5)
-        buf = []
-        # temp = temp >> 4  #Shift value by 4 bits to reduce range (1023/16) for smoother transition
-        if (len(buf) < 4):  # If the bufcount is less than 4, have it equal the value of the potPin
-            buf[len(buf)] = accelerometer.acceleration
-            # cumulative += buf[len(buf)] #Add and store buf into cumulative
-        else:  # If bufcount is now greater than the buf size
-            # value = cumulative >> 2     #value is equal to cumulative/4
-            # cumulative = 0
+        temp = accelerometer.acceleration           #gets accelerometer data
 
-            for i in range(len(buf)):
-                xVal[i] = buf[i].x
-                yVal[i] = buf[i].y
-                zVal[i] = buf[i].z
+        #buffer is filling
+        if (not buf.full()):                        #Buffer is not full
+            buf.put(temp)                           #add item to queue
+            total += temp                           #add data to running totals
+        #buffer is full
+        else:
+            total -= buf.get()                      #subtract oldest data from running totals
+            total += temp                           #add data to running totals
+            buf.put(temp)                           #adds item to queue
 
-            xValMean = mean(xVal)
-            yValMean = mean(yVal)
-            zValMean = mean(zVal)
+        numAxisOverThresh = 0                       #stores the number of axis that are over the threshold
 
-            print((xValMean,yValMean,zValMean))
+        for axistotal in total:                     #looks at each axis in the total
+            axisavg = axistotal/buffersize          #computes average of each axis total         
+            if(axisavg > fallthresh):               #if we have an axis over the treshold increase
+                numAxisOverThresh += 1              #increase the number of axis over threshold
+
+        if(numAxisOverThresh >= axislimit):         #if too many axis are over the threshold
+            falldetected = True                     #a fall is detected
+        
+        if(falldetected):
+            print("FALL HAS BEEN DETECTED!!!!!")    #if fall detected print alert
+
 
 
 if __name__ == "__main__":
