@@ -14,7 +14,6 @@ def main():
     buf = Queue(maxsize = buffersize)               #creates buffer of desired size as a queue (first in first out)
     falldetected = False                            #stores if a fall is detected
 
-
     while True:
         print("%f %f %f" % accelerometer.acceleration)
         print("Motion detected: %s" % accelerometer.events["motion"])
@@ -43,6 +42,7 @@ def main():
         
         if(falldetected):
             print("FALL HAS BEEN DETECTED!!!!!")    #if fall detected print alert
+
 
 
 if __name__ == "__main__":
