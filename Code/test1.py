@@ -86,10 +86,12 @@ def main():
                     buttonpressed = True                #button has been pressed
                 time.sleep(0.25)
                 count += 1
+                
+            
+            GPIO.output(27, GPIO.LOW)           #turns off blue LED
                     
             #alerts authorities
             if falldetected:                             #button not pressed indicating true fall
-                GPIO.output(17, GPIO.LOW)           #turns off green LED
                 GPIO.output(22, GPIO.HIGH)          #turns on red LED
                 time.sleep(5)                       #waits 5 seconds on red alert
                 print("Call 911")
@@ -102,7 +104,7 @@ def main():
                 falldetected = False
                 GPIO.output(22, GPIO.LOW)
             
-            GPIO.output(27, GPIO.LOW)
+            
 
 
 if __name__ == "__main__":
