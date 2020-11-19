@@ -14,9 +14,9 @@ def main():
     #GPIO.setup(buzzer, GPIO.OUT)
 
     total = [0, 0, 0]                               #stores totals
-    fallthresh = 4.5                               #if the average acceleration exceeds this fall is detected
+    fallthresh = 4.5                                #if the average acceleration exceeds this fall is detected
     axislimit = 3                                   #number of axis required to be over threshold (1-3) for fall to be detected   
-    buffersize = 4                       
+    buffersize = 4                                  #stores the buffer size                  
     buf = Queue(maxsize = buffersize)               #creates buffer of desired size as a queue (first in first out)
     falldetected = False                            #stores if a fall is detected
 
@@ -29,18 +29,18 @@ def main():
         #buffer is filling
         if (not buf.full()):                        #Buffer is not full
             buf.put(temp)                           #add item to queue
-            total[0] += abs(temp[0])                           #add data to running totals
+            total[0] += abs(temp[0])                #add data to running totals
             total[1] += abs(temp[1])
             total[2] += abs(temp[2])
         #buffer is full
         else:
             temprm = buf.get()
             temprm = temprm
-            total[0] -= abs(temprm[0])                           #add data to running totals
+            total[0] -= abs(temprm[0])              #add data to running totals
             total[1] -= abs(temprm[1])
             total[2] -= abs(temprm[2])
             buf.put(temp)                           #add item to queue
-            total[0] += abs(temp[0])                           #add data to running totals
+            total[0] += abs(temp[0])                #add data to running totals
             total[1] += abs(temp[1])
             total[2] += abs(temp[2])
   
@@ -49,7 +49,7 @@ def main():
         numAxisOverThresh = 0                       #stores the number of axis that are over the threshold
 
         averages = [0, 0, 0]
-        i =0
+        i = 0                                       #counts 
         
         for axistotal in total:                     #looks at each axis in the total
             axisavg = axistotal/buffersize          #computes average of each axis total         
