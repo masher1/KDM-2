@@ -30,8 +30,6 @@ def main():
         #print("%f %f %f" % accelerometer.acceleration)
         #print("Motion detected: %s" % accelerometer.events["motion"])
         GPIO.output(17, GPIO.HIGH)                  #turns on green LED
-        GPIO.output(27, GPIO.LOW)                   #blue LED off
-        GPIO.output(22, GPIO.LOW)                   #red LED off
         time.sleep(0.5)
         temp = accelerometer.acceleration           #gets accelerometer data
 
@@ -92,7 +90,6 @@ def main():
             #alerts authorities
             if falldetected:                             #button not pressed indicating true fall
                 GPIO.output(17, GPIO.LOW)           #turns off green LED
-                GPIO.output(27, GPIO.LOW)           #turns off blue LED
                 GPIO.output(22, GPIO.HIGH)          #turns on red LED
                 time.sleep(5)                       #waits 5 seconds on red alert
                 print("Call 911")
@@ -103,6 +100,9 @@ def main():
                 total = [0,0,0]
                 #sets buffer to not fall to continue in loop
                 falldetected = False
+                GPIO.output(22, GPIO.LOW)
+            
+            GPIO.output(27, GPIO.LOW)
 
 
 if __name__ == "__main__":
